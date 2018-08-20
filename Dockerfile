@@ -14,19 +14,19 @@ RUN apt-get update && apt-get install -y \
 		libfreetype6 \
 	--no-install-recommends && rm -rf /var/lib/apt/lists/*
 
+ARG GPG_KEY='46095ACC8548582C1A2699A9D27D666CD88E42B4'
 RUN set -ex; \
 # https://artifacts.elastic.co/GPG-KEY-elasticsearch
-	key='46095ACC8548582C1A2699A9D27D666CD88E42B4'; \
 	export GNUPGHOME="$(mktemp -d)"; \
-	gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
-	gpg --export "$key" > /etc/apt/trusted.gpg.d/elastic.gpg; \
+	gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "${GPG_KEY}"; \
+	gpg --export "${GPG_KEY}" > /etc/apt/trusted.gpg.d/elastic.gpg; \
 	rm -fr "$GNUPGHOME"; \
 	apt-key list
 
 # https://www.elastic.co/guide/en/kibana/6.0/deb.html
 RUN echo 'deb https://artifacts.elastic.co/packages/6.x/apt stable main' > /etc/apt/sources.list.d/kibana.list
 
-ENV KIBANA_VERSION 6.3.1
+ENV KIBANA_VERSION 6.3.2
 
 RUN set -x \
 	&& apt-get update \
